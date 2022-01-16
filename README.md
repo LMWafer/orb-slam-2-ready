@@ -1,4 +1,4 @@
-[**Introduction**](#introduction) | [**I want demo now !**](#i-want-demo-now) | [**General info**](#general-info) | [**Prerequisites**](#image-prerequisites) | [**Installation**](#image-installation) | [**How-tos**](#image-usage)
+[**Introduction**](#introduction) | [**I want demo now !**](#i-want-demo-now) | [**General info**](#general-info) | [**Prerequisites**](#image-prerequisites) | [**Installation**](#image-installation) | [**How-tos**](#how-tos)
 
 # Introduction 
 
@@ -60,7 +60,7 @@ cd /dpds/ORB_SLAM2/
 ./Examples/Monocular/mono_tum Vocabulary/ORBvoc.txt Examples/Monocular/TUM1.yaml /app/data/datasets/rgbd_dataset_freiburg2_rpy
 ```
 
-You can run every example that comes along the library. Everything in the image is already built! Note that an [orb-slam-3-ready](https://github.com/LMWafer/orb-slam-3-ready) image provides a real-time demo with multiple cameras. 
+You can run every example that comes along the library. Everything in the image is already built! Note that an [orb-slam-2-ready](https://github.com/LMWafer/orb-slam-2-ready) image provides a real-time demo with multiple cameras. 
 
 # General info
 The image is based on two image layers : [Ubuntu 18.04](https://hub.docker.com/_/ubuntu?tab=tags&page=1&name=18.04), [realsense-ready](https://hub.docker.com/r/lmwafer/realsense-ready). 
@@ -109,9 +109,11 @@ You may want better control of what's inside the image. To this matter you will 
 docker pull lmwafer/orb-slam2-ready:<desired tag>
 ```
 
-# Image usage
+# How tos
 
 All the commands need to be run in **orb-slam-2-ready** directory. 
+
+## Use image
 
 Get inside a freshly new container (basically `up` + `enter`)
 ```bash
@@ -133,7 +135,16 @@ Stop running *orb-slam-2-container* (and removes it, by default only data in */a
 make down
 ```
 
+## Build image
 Build *orb-slam-2-ready* image (uses *Dockerfile*)
 ```bash
 make build
+```
+By default, 4 build jobs are executed at time. You can speed up the process by passing as parameter the number of simultaneous build jobs
+```bash
+docker build -t lmwafer/orb-slam2-ready:<tag> --build-arg jobs=<number> .
+```
+**Maximum** `<number>` is recommended to be `<processors number> - 1`. Get your `<processors number>` via
+```bash
+nproc
 ```
