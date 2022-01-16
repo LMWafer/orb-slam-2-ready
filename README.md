@@ -26,7 +26,7 @@ This repository contains release info and advanced image manipulation. See the p
   
 2. This will pull the image from [Docker hub](https://hub.docker.com/r/lmwafer/orb-slam2-ready/tags) and run a container (needs a GPU for Pangolin, container removed after exit)
 ```bash
-sudo xhost +local:root && docker run --privileged --name orb-2-container --rm -p 8086:8086 -e DISPLAY=$DISPLAY -e QT_X11_NO_MITSHM=1 -v /tmp/.X11-unix:/tmp/.X11-unix -v /dev:/dev:ro --gpus all -it lmwafer/orb-slam2-ready:1.1-ubuntu18.04
+sudo xhost +local:root && docker run --privileged --name orb-2-container --rm -p 8086:8086 -e DISPLAY=$DISPLAY -e QT_X11_NO_MITSHM=1 -v /tmp/.X11-unix:/tmp/.X11-unix -v /dev:/dev:ro --gpus all -it lmwafer/orb-slam2-ready:1.2-ubuntu18.04
 ```
 
 3. Run this inside the container to download 4 TUM datasets

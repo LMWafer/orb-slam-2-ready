@@ -2,8 +2,8 @@ version: '3.7'
 
 services:
   realsense-ready:
-    container_name: orb-2-container
-    image: lmwafer/orb-slam2-ready:1.1-ubuntu18.04
+    container_name: orb-slam-2-container
+    image: lmwafer/orb-slam2-ready:1.2-ubuntu18.04
     restart: always
     privileged: true
     ports:
