@@ -1,4 +1,4 @@
-[**Introduction**](#introduction) | [**I want vSLAM now !**](#i-want-vslam-now) | [**General info**](#general-info) | [**Prerequisites**](#image-prerequisites) | [**Installation**](#image-installation) | [**How-tos**](#image-usage)
+[**Introduction**](#introduction) | [**I want demo now !**](#i-want-demo-now) | [**General info**](#general-info) | [**Prerequisites**](#image-prerequisites) | [**Installation**](#image-installation) | [**How-tos**](#image-usage)
 
 # Introduction 
 
@@ -29,11 +29,38 @@ This repository contains release info and advanced image manipulation. See the p
 sudo xhost +local:root && docker run --privileged --name orb-2-container --rm -p 8086:8086 -e DISPLAY=$DISPLAY -e QT_X11_NO_MITSHM=1 -v /tmp/.X11-unix:/tmp/.X11-unix -v /dev:/dev:ro --gpus all -it lmwafer/orb-slam2-ready:1.1-ubuntu18.04
 ```
 
-3. Run this inside the container to start a dataset demo. This is not real-time vSLAM but a loop of 4 TUM dataset 
+3. Run this inside the container to download 4 TUM datasets
 ```bash
-cd /app/ && make prepare && make demo
+apt-get update
+	apt-get install -y wget tar
+	cd /app/ && \
+	rm -rf data/datasets/ && \
+	mkdir data/datasets/ && \
+	cd data/datasets/ && \
+	wget https://vision.in.tum.de/rgbd/dataset/freiburg1/rgbd_dataset_freiburg1_xyz.tgz && \
+	wget https://vision.in.tum.de/rgbd/dataset/freiburg1/rgbd_dataset_freiburg1_rpy.tgz && \
+	wget https://vision.in.tum.de/rgbd/dataset/freiburg2/rgbd_dataset_freiburg2_xyz.tgz && \
+	wget https://vision.in.tum.de/rgbd/dataset/freiburg2/rgbd_dataset_freiburg2_rpy.tgz && \
+	tar -xzf rgbd_dataset_freiburg1_xyz.tgz && \
+	tar -xzf rgbd_dataset_freiburg1_rpy.tgz && \
+	tar -xzf rgbd_dataset_freiburg2_xyz.tgz && \
+	tar -xzf rgbd_dataset_freiburg2_rpy.tgz && \
+	rm rgbd_dataset_freiburg1_xyz.tgz && \
+	rm rgbd_dataset_freiburg1_rpy.tgz && \
+	rm rgbd_dataset_freiburg2_xyz.tgz && \
+	rm rgbd_dataset_freiburg2_rpy.tgz
 ```
-You can run every example that comes along the library. Everything in the image is already built!
+
+4. Run this to finally start non real-time vSLAM on the 4 datasets.
+```bash
+cd /dpds/ORB_SLAM2/
+./Examples/Monocular/mono_tum Vocabulary/ORBvoc.txt Examples/Monocular/TUM1.yaml /app/data/datasets/rgbd_dataset_freiburg1_xyz
+./Examples/Monocular/mono_tum Vocabulary/ORBvoc.txt Examples/Monocular/TUM1.yaml /app/data/datasets/rgbd_dataset_freiburg1_rpy
+./Examples/Monocular/mono_tum Vocabulary/ORBvoc.txt Examples/Monocular/TUM1.yaml /app/data/datasets/rgbd_dataset_freiburg2_xyz
+./Examples/Monocular/mono_tum Vocabulary/ORBvoc.txt Examples/Monocular/TUM1.yaml /app/data/datasets/rgbd_dataset_freiburg2_rpy
+```
+
+You can run every example that comes along the library. Everything in the image is already built! Note that an [orb-slam-3-ready](https://github.com/LMWafer/orb-slam-3-ready) image provides a real-time demo with multiple cameras. 
 
 # General info
 The image is based on two image layers : [Ubuntu 18.04](https://hub.docker.com/_/ubuntu?tab=tags&page=1&name=18.04), [realsense-ready](https://hub.docker.com/r/lmwafer/realsense-ready). 
@@ -50,7 +77,7 @@ cd /dpds/ORB_SLAM2/
 
 You may want better control of what's inside the image. To this matter you will find here : 
 
-- Image *Dockerfile*. Note that **orb-slam-2-ready** lays on top of **realsense-ready**. Modify that by changing `FORM` instruction in *Dockerfile-orb*. Don't forget general usage dependencies that came along realsense-ready image !
+- Image *Dockerfile*. Note that **orb-slam2-ready** lays on top of **realsense-ready**. Modify that by changing `FORM` instruction in *Dockerfile-orb*. Don't forget general usage dependencies that came along realsense-ready image !
 
 - *docker-compose.yml* to start container automatically and for Kubernetes-like deployement. Note that stopping a container removes it. An external *app* directory is linked to the containers */app* one in order to provide a permanent save point.
 
@@ -69,7 +96,7 @@ You may want better control of what's inside the image. To this matter you will 
   ```
   before restarting the installation process
 
-- Nvidia Container Toolkit (tested with ubuntu20.04 distribution), see [NVIDIA Container Toolkit Installation Guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html)
+- Nvidia Container Toolkit (tested with ubuntu 20.04 distribution), see [NVIDIA Container Toolkit Installation Guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html)
 
 - A PC with GPU. Use the following to list available graphics units
   ```bash
